@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        #gameContainer {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Guess the Number</h1>
+    <div id="gameContainer">
+        <p>Guess a number between 1 and 100</p>
+        <input type="number" id="guessInput" min="1" max="100" placeholder="Enter your guess" />
+        <button onclick="makeGuess()">Guess</button>
+        <p class="message" id="message"></p>
+        <p class="message" id="remainingChances">Chances left: 3</p>
+    </div>
+
+    <script>
+        // Initialize game variables
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let remainingChances = 3;
+
+        // Function to make a guess
+        function makeGuess() {
+            const guessInput = document.getElementById("guessInput");
+            const message = document.getElementById("message");
+            const remainingChancesDisplay = document.getElementById("remainingChances");
+
+            // Parse and validate input
+            const guess = parseInt(guessInput.value);
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                message.textContent = "Please enter a valid number between 1 and 100.";
+                return;
+            }
+
+            // Decrease remaining chances
+            remainingChances--;
+
+            // Check guess
+            if (guess === targetNumber) {
+                message.textContent = "Congratulations! You guessed it right!";
+                endGame();
+            } else if (remainingChances > 0) {
+                message.textContent = guess < targetNumber ? "Too low!" : "Too high!";
+                remainingChancesDisplay.textContent = `Chances left: ${remainingChances}`;
+            } else {
+                message.textContent = `Game over! The correct number was ${targetNumber}.`;
+                endGame();
+            }
+
+            // Clear input
+            guessInput.value = "";
+        }
+
+        // End game by disabling input and button
+        function endGame() {
+            document.getElementById("guessInput").disabled = true;
+            document.querySelector("button").disabled = true;
+        }
+    </script>
+
+</body>
+</html>
