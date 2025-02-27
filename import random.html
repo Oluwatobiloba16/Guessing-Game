@@ -1,0 +1,74 @@
+import random
+
+class Car:
+    def _init_(self, name, speed):
+        self.name = name
+        self.speed = speed
+        self.distance_covered = 0
+    
+    def move(self):
+        """Simulates the car moving by increasing the distance covered, with possible random events."""
+        event = random.choice(["normal", "boost", "breakdown"])
+        if event == "boost":
+            self.distance_covered += random.randint(self.speed, self.speed + 10)
+        elif event == "breakdown":
+            self.distance_covered += 0  # No movement
+        else:
+            self.distance_covered += random.randint(self.speed - 5, self.speed + 5)
+    
+    def get_distance(self):
+        return self.distance_covered
+    
+    def _str_(self):
+        return f"{self.name}: {self.distance_covered} km"
+
+class SportsCar(Car):
+    def _init_(self, name):
+        super()._init_(name, speed=random.randint(20, 30))
+
+class SUV(Car):
+    def _init_(self, name):
+        super()._init_(name, speed=random.randint(15, 25))
+
+class Truck(Car):
+    def _init_(self, name):
+        super()._init_(name, speed=random.randint(10, 20))
+
+class Motorcycle(Car):
+    def _init_(self, name):
+        super()._init_(name, speed=random.randint(25, 35))
+
+class Race:
+    def _init_(self, distance):
+        self.distance = distance
+        self.cars = []
+    
+    def add_car(self, car):
+        self.cars.append(car)
+    
+    def start(self):
+        print("Race started!\n")
+        while not self._race_finished():
+            for car in self.cars:
+                car.move()
+                print(car)
+            print("\n---\n")
+        self.display_results()
+    
+    def _race_finished(self):
+        return any(car.get_distance() >= self.distance for car in self.cars)
+    
+    def display_results(self):
+        self.cars.sort(key=lambda car: car.get_distance(), reverse=True)
+        print("Race finished! Results:")
+        for i, car in enumerate(self.cars, start=1):
+            print(f"{i}. {car.name} - {car.get_distance()} km")
+
+if _name_ == "_main_":
+    race = Race(distance=100)
+    race.add_car(SportsCar("Ferrari"))
+    race.add_car(SUV("Jeep"))
+    race.add_car(Truck("Volvo"))
+    race.add_car(Motorcycle("Yamaha"))
+    race.start()
+        
